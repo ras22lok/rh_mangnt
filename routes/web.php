@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\MainController;
+use App\Models\User;
 use Illuminate\Mail\Message;
 use Illuminate\Support\Facades\{Mail, Route};
 
@@ -17,6 +20,10 @@ Route::get('/teste-email', function () {
     }
 });
 
-Route::get('/', function() {
-    return "RH Management";
+Route::controller(MainController::class)->middleware('auth')->group(function() {
+    Route::get('/', 'index');
+});
+
+Route::fallback(function() {
+    return redirect('/');
 });
