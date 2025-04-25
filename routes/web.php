@@ -21,7 +21,7 @@ Route::get('/teste-email', function () {
 });
 
 Route::controller(MainController::class)->middleware('auth')->group(function() {
-    Route::get('/', 'index');
+    Route::get('/', 'index')->name('home');
 });
 
 Route::fallback(function() {
