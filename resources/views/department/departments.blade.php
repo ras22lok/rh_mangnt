@@ -5,12 +5,12 @@
         @empty($departments)
             <div class="text-center my-5">
                 <p>Nenhum departamento encontrado.</p>
-                <a href="#" class="btn btn-primary">Criar um novo departamento</a>
+                <a href="{ route('departamento.criar') }" class="btn btn-primary">Criar um novo departamento</a>
             </div>
             <hr>
         @else
             <div class="mb-3">
-                <a href="#" class="btn btn-primary">Criar um novo departamento</a>
+                <a href="{{ route('departamento.criar') }}" class="btn btn-primary">Criar um novo departamento</a>
             </div>
             <table class="table w-50" id="table">
                 <thead class="table-dark">
@@ -23,7 +23,7 @@
                             <td>{{ $department->name }}</td>
                             <td>
                                 <div class="d-flex gap-3 justify-content-end">
-                                    <a href="#" class="btn btn-sm btn-outline-dark"><i class="fa-regular fa-pen-to-square me-2"></i>Editar</a>
+                                    <a href="{{ route('departamento.editar', ['id' => $department->id]) }}" class="btn btn-sm btn-outline-dark"><i class="fa-regular fa-pen-to-square me-2"></i>Editar</a>
                                     <a href="#" class="btn btn-sm btn-outline-dark"><i class="fa-regular fa-trash-can me-2"></i>Deletar</a>
                                 </div>
                             </td>
@@ -32,5 +32,14 @@
                 </tbody>
             </table>
         @endempty
+        @if (session('server_success'))
+            <div class="alert alert-success text-center w-50">
+                {{ session('server_success') }}
+            </div>
+        @elseif (session('server_error'))
+            <div class="alert alert-danger text-center w-50">
+                {{ session('server_error') }}
+            </div>
+        @endif
     </div>
 </x-layout-app>

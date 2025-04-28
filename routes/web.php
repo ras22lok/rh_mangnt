@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\{MainController, ProfileController, AuthController, DepartmentController};
-use App\Http\Middleware\ValidatePassword;
+use App\Http\Middleware\{ValidateCreateDepartment, ValidatePassword};
 use App\Models\User;
 use Illuminate\Mail\Message;
 use Illuminate\Support\Facades\{Mail, Route};
@@ -30,7 +30,11 @@ Route::controller(MainController::class)->middleware('auth')->group(function() {
     });
 
     Route::controller(DepartmentController::class)->group(function() {
-        Route::get('/departamento', 'index')->name('departamento');
+        Route::get('/departamento/listar', 'index')->name('departamento.listar');
+        Route::get('/departamento/criar', 'create')->name('departamento.criar');
+        Route::post('/departamento/criar', 'store')->name('departamento.criar-db')->middleware(ValidateCreateDepartment::class);
+        Route::get('/departamento/editar/{id}', 'editar')->name('departamento.editar');
+        Route::post('/departamento/editar', 'update')->name('departamento.editar-db');
     });
 });
 
