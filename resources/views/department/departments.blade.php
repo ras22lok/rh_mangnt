@@ -23,8 +23,12 @@
                             <td>{{ $department->name }}</td>
                             <td>
                                 <div class="d-flex gap-3 justify-content-end">
-                                    <a href="{{ route('departamento.editar', ['id' => $department->id]) }}" class="btn btn-sm btn-outline-dark"><i class="fa-regular fa-pen-to-square me-2"></i>Editar</a>
-                                    <a href="#" class="btn btn-sm btn-outline-dark"><i class="fa-regular fa-trash-can me-2"></i>Deletar</a>
+                                    @if ($department->id === 1)
+                                        <i class="fa-solid fa-lock"></i>
+                                    @else
+                                        <a href="{{ route('departamento.editar', ['id' => encrypt($department->id)]) }}" class="btn btn-sm btn-outline-dark"><i class="fa-regular fa-pen-to-square me-2"></i>Editar</a>
+                                        <a href="{{ route('departamento.confirmar-remocao', ['id' => encrypt($department->id)]) }}" class="btn btn-sm btn-outline-dark"><i class="fa-regular fa-trash-can me-2"></i>Deletar</a>
+                                    @endif
                                 </div>
                             </td>
                         </tr>

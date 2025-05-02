@@ -18,7 +18,7 @@ class DepartmentController extends Controller
         return Auth::user()->can('admin') ? view('department.add-departament') : redirect()->back();
     }
 
-    public function store(Request $request) {
+    public function store(Request $request): RedirectResponse {
         if(Auth::user()->cannot('admin')) {
             return redirect()->back();
         }
@@ -33,14 +33,21 @@ class DepartmentController extends Controller
     }
 
     public function editar($id): View|RedirectResponse {
-        return Auth::user()->can('admin') ? view('department.edit-department', ['department' => Department::find($id)]) : redirect()->back();
-    }
-
-    public function update(Request $request) {
-        if(Auth::user()->cannot('admin')) {
+        if(Auth::user()->cannot('admin') OR intval(decrypt($request->id)) === 1) {
             return redirect()->back();
         }
-        $departamento = Department::find($request->id);
+        $departamento = Department::find(decrypt($id));
+        if(!$departamento) {
+            redirect()->back();
+        }
+        return view('department.edit-department', ['department' => $departamento]);
+    }
+
+    public function update(Request $request): RedirectResponse {
+        if(Auth::user()->cannot('admin') OR intval(decrypt($request->id)) === 1) {
+            return redirect()->back();
+        }
+        $departamento = Department::find(decrypt($request->id));
         if(!$departamento) {
             return redirect()->back()->withInput()->with(['server_error' => 'Erro ao atualizar o departamento!']);
         }
@@ -50,6 +57,33 @@ class DepartmentController extends Controller
             return redirect()->route('departamento.listar')->with(['server_success' => 'Departamento atualizado com sucesso!']);
         } catch (\Exception $e) {
             return redirect()->route('departamento.listar')->with(['server_error' => 'Erro ao atualizar o departamento!']);
+        }
+    }
+
+    public function remover($id): View|RedirectResponse {
+        if(Auth::user()->cannot('admin') OR intval(decrypt($id)) === 1) {
+            return redirect()->back();
+        }
+        $departamento = Department::find(decrypt($id));
+        if(!$departamento) {
+            return redirect()->back()->withInput()->with(['server_error' => 'Erro ao remover o departamento!']);
+        }
+        return view('department.delete-department', compact('departamento'));
+    }
+
+    public function delete($id): RedirectResponse {
+        if(Auth::user()->cannot('admin') OR intval(decrypt($id)) === 1) {
+            return redirect()->back();
+        }
+        try {
+            $departamento = Department::find(decrypt($id));
+            if(!$departamento) {
+                return redirect()->back()->withInput()->with(['server_error' => 'Erro ao remover o departamento!']);
+            }
+            $departamento->delete();
+            return redirect()->route('departamento.listar')->with(['server_success' => "Departamento removido com sucesso!"]);
+        } catch (\Exception $e) {
+            return redirect()->back()->withInput()->with(['server_error' => 'Erro ao remover o departamento!']);
         }
     }
 }

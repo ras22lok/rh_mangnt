@@ -13,7 +13,7 @@
                     </div>
                 @enderror
             </div>
-            <input type="hidden" name="id" value={{ $department->id }}>
+            <input type="hidden" name="id" value={{ encrypt($department->id) }}>
             <div class="mb-3">
                 <a href="{{ route('departamento.listar') }}" class="btn btn-outline-danger me-3">CANCELAR</a>
                 <button type="submit" class="btn btn-primary">Editar departamento</button>

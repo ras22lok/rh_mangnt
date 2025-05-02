@@ -34,7 +34,9 @@ Route::controller(MainController::class)->middleware('auth')->group(function() {
         Route::get('/departamento/criar', 'create')->name('departamento.criar');
         Route::post('/departamento/criar', 'store')->name('departamento.criar-db')->middleware(ValidateCreateDepartment::class);
         Route::get('/departamento/editar/{id}', 'editar')->name('departamento.editar');
-        Route::post('/departamento/editar', 'update')->name('departamento.editar-db');
+        Route::post('/departamento/editar', 'update')->name('departamento.editar-db')->middleware(ValidateCreateDepartment::class);
+        Route::get('/departamento/confirmar-remocao/{id}', 'remover')->name('departamento.confirmar-remocao');
+        Route::get('/departamento/remover/{id}', 'delete')->name('departamento.remover');
     });
 });
 
