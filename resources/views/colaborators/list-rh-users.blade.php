@@ -22,6 +22,7 @@
                     <th>Cidade</th>
                     <th>Data de admissão</th>
                     <th>Salario</th>
+                    <th>Conta confirmada</th>
                     <th></th>
                 </thead>
                 <tbody>
@@ -35,6 +36,7 @@
                             <td>{{ $colaborator->detail->city }}</td>
                             <td>{{ $colaborator->detail->admission_date }}</td>
                             <td>R${{ $colaborator->detail->salary }}</td>
+                            <td>{{ $colaborator->email_verified_at }}</td>
                             <td>
                                 <div class="d-flex gap-3 justify-content-end">
                                     <a href="{{ route('recursos-humanos.editar', ['id' => encrypt($colaborator->id)]) }}" class="btn btn-sm btn-outline-success"><i class="fa-regular fa-pen-to-square me-2"></i>Editar</a>

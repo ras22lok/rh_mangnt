@@ -14,7 +14,13 @@ use Illuminate\View\View;
 class RhUserController extends Controller
 {
     public function index(): View|RedirectResponse {
-        return Auth::user()->can('admin') ? view('colaborators.list-rh-users', ['colaborators' => User::where('role', 'rh')->with('detail')->with('department')->get()]) : redirect()->back();
+        $dados = User::where('role', 'rh')->with('detail')->with('department')->get();
+        foreach ($dados as $dado) {
+            $dado->email_verified_at = ($dado->email_verified_at) ? 'Sim':"Não";
+        }
+        $colaborators = $dados;
+        unset($dados);
+        return Auth::user()->can('admin') ? view('colaborators.list-rh-users', compact('colaborators')) : redirect()->back();
     }
 
     public function create(): View|RedirectResponse{
@@ -51,8 +57,6 @@ class RhUserController extends Controller
             UserDetail::create($detalhes);
             Mail::to($user->email)->send(new ConfirmAccountEmail(route('confirmar-conta', $user->remember_token)));
             unset($user, $dados);
-
-
             return redirect()->route('recursos-humanos.listar')->with(['server_success' => 'Colaborador criado com sucesso!']);
         } catch (\Exception $e) {
             return redirect()->route('recursos-humanos.listar')->with(['server_error' => 'Erro ao criar o colaborador!']);

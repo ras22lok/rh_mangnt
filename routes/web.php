@@ -23,6 +23,8 @@ Route::get('/teste-email', function () {
 Route::controller(ConfirmAccountController::class)->middleware('guest')->group(function() {
     Route::get('/confirmacao-conta/{token}', 'confirmAccount')->name('confirmar-conta');
     Route::post('/confirmacao-conta', 'confirmAccountSubmit')->name('confirmar-conta-db');
+
+    
 });
 
 Route::controller(MainController::class)->middleware('auth')->group(function() {

@@ -14,7 +14,7 @@ class ConfirmAccountController extends Controller
         return (!empty($user)) ? view('auth.confirm-account' ,['token' => $token]) : redirect()->route('home');
     }
 
-    public function confirmAccountSubmit(Request $request) {
+    public function confirmAccountSubmit(Request $request): View|RedirectResponse {
         $request->validate([
             'token' => 'required|string|size:60',
             'password' => 'required|confirmed|min:8|max:16|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/',
@@ -36,13 +36,17 @@ class ConfirmAccountController extends Controller
         $dados['remember_token'] =  NULL;
         $dados['email_verified_at'] =  now();
         $token = $request->token;
-        unset($request, $user);
+        unset($request);
         try {
             User::where('remember_token', $token)->update($dados);
-            return redirect()->route('login')->with(['status' => "Senha cadastrada com sucesso!"]);
+            unset($dados);
+            // echo "<pre>";
+            // print_r($user);die;
+            // return redirect()->route('login')->with(['status' => "Senha cadastrada com sucesso!"]);
+            return view('auth.welcome', ['user' => $user]);
         } catch (\Exception $e) {
-            // return redirect()->route('login')->with(['server_success' => "Erro ao cadastrar a senha!"]);
-            return $e->getMessage();
+            return redirect()->route('login')->with(['server_success' => "Erro ao cadastrar a senha!"]);
+            // return $e->getMessage();
         }
     }
 }
