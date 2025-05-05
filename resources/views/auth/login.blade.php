@@ -35,6 +35,10 @@
                         <div class="alert alert-success text-center my-3">
                             {{ session('status') }}
                         </div>
+                    @elseif (session('server_error'))
+                        <div class="alert alert-success text-center my-3">
+                            {{ session('server_error') }}
+                        </div>
                     @endif
                 </div>
             </div>

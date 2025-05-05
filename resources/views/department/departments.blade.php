@@ -23,7 +23,7 @@
                             <td>{{ $department->name }}</td>
                             <td>
                                 <div class="d-flex gap-3 justify-content-end">
-                                    @if ($department->id === 1)
+                                    @if ($department->id < 3)
                                         <i class="fa-solid fa-lock"></i>
                                     @else
                                         <a href="{{ route('departamento.editar', ['id' => encrypt($department->id)]) }}" class="btn btn-sm btn-outline-dark"><i class="fa-regular fa-pen-to-square me-2"></i>Editar</a>

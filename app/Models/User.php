@@ -10,6 +10,16 @@ class User extends Authenticable
 {
     use Notifiable;
 
+    protected $fillable = [
+        'department_id',
+        'name',
+        'email',
+        'role',
+        'password',
+        'permissions',
+        'remember_token',
+    ];
+
     public function detail(): HasOne {
         return $this->hasOne(UserDetail::class);
     }

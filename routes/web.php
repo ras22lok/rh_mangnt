@@ -1,7 +1,7 @@
 <?php
 
-use App\Http\Controllers\{MainController, ProfileController, AuthController, DepartmentController};
-use App\Http\Middleware\{ValidateCreateDepartment, ValidatePassword};
+use App\Http\Controllers\{MainController, ProfileController, AuthController, ConfirmAccountController, DepartmentController, RhUserController};
+use App\Http\Middleware\{ValidateColaborator, ValidateCreateDepartment, ValidatePassword};
 use App\Models\User;
 use Illuminate\Mail\Message;
 use Illuminate\Support\Facades\{Mail, Route};
@@ -20,9 +20,13 @@ Route::get('/teste-email', function () {
     }
 });
 
+Route::controller(ConfirmAccountController::class)->middleware('guest')->group(function() {
+    Route::get('/confirmacao-conta/{token}', 'confirmAccount')->name('confirmar-conta');
+    Route::post('/confirmacao-conta', 'confirmAccountSubmit')->name('confirmar-conta-db');
+});
+
 Route::controller(MainController::class)->middleware('auth')->group(function() {
     Route::get('/', 'index')->name('home');
-
     Route::controller(ProfileController::class)->group(function() {
         Route::get('/user/perfil', 'index')->name('user.perfil');
         Route::post('/user/alterar-senha', 'updatePassword')->name('user.alterar-senha')->middleware(ValidatePassword::class);
@@ -37,6 +41,16 @@ Route::controller(MainController::class)->middleware('auth')->group(function() {
         Route::post('/departamento/editar', 'update')->name('departamento.editar-db')->middleware(ValidateCreateDepartment::class);
         Route::get('/departamento/confirmar-remocao/{id}', 'remover')->name('departamento.confirmar-remocao');
         Route::get('/departamento/remover/{id}', 'delete')->name('departamento.remover');
+    });
+
+    Route::controller(RhUserController::class)->group(function() {
+        Route::get('/recursos-humanos/listar', 'index')->name('recursos-humanos.listar');
+        Route::get('/recursos-humanos/criar', 'create')->name('recursos-humanos.criar');
+        Route::post('/recursos-humanos/criar', 'store')->name('recursos-humanos.criar-db')->middleware(ValidateColaborator::class);
+        Route::get('/recursos-humanos/editar/{id}', 'editar')->name('recursos-humanos.editar');
+        Route::post('/recursos-humanos/editar', 'update')->name('recursos-humanos.editar-db')->middleware(ValidateColaborator::class);
+        Route::get('/recursos-humanos/confirmar-remocao/{id}', 'remover')->name('recursos-humanos.confirmar-remocao');
+        Route::get('/recursos-humanos/remover/{id}', 'delete')->name('recursos-humanos.remover');
     });
 });
 

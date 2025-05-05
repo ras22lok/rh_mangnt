@@ -18,5 +18,10 @@ class DepartmentsTableSeeder extends Seeder
             'created_at' => now(),
             'updated_at' => now(),
         ]);
+        DB::table('departments')->insert([
+            'name' => 'Recursos Humanos',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
     }
 }

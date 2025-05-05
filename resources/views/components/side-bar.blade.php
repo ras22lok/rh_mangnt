@@ -2,7 +2,7 @@
     <a href="{{ route('home') }}"><i class="fas fa-home me-3"></i>Home</a>
     @can('admin')
         <a href="#"><i class="fas fa-users me-3"></i>Colaboradores</a>
-        <a href="#"><i class="fas fa-user-gear me-3"></i>Colaboradores do RH</a>
+        <a href="{{ route('recursos-humanos.listar') }}"><i class="fas fa-user-gear me-3"></i>Colaboradores do RH</a>
         <a href="{{ route('departamento.listar') }}"><i class="fas fa-industry me-3"></i>Departamentos</a>
 
     @endcan

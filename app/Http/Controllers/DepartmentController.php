@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Department;
+use App\Services\VerifyId;
 use Illuminate\Http\{RedirectResponse, Request};
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
@@ -33,10 +34,10 @@ class DepartmentController extends Controller
     }
 
     public function editar($id): View|RedirectResponse {
-        if(Auth::user()->cannot('admin') OR intval(decrypt($request->id)) === 1) {
+        if(Auth::user()->cannot('admin') OR intval(VerifyId::checkCryptdado($request->id)) < 3) {
             return redirect()->back();
         }
-        $departamento = Department::find(decrypt($id));
+        $departamento = Department::find(VerifyId::checkCryptdado($id));
         if(!$departamento) {
             redirect()->back();
         }
@@ -44,10 +45,10 @@ class DepartmentController extends Controller
     }
 
     public function update(Request $request): RedirectResponse {
-        if(Auth::user()->cannot('admin') OR intval(decrypt($request->id)) === 1) {
+        if(Auth::user()->cannot('admin') OR intval(VerifyId::checkCryptdado($request->id)) < 3) {
             return redirect()->back();
         }
-        $departamento = Department::find(decrypt($request->id));
+        $departamento = Department::find(VerifyId::checkCryptdado($request->id));
         if(!$departamento) {
             return redirect()->back()->withInput()->with(['server_error' => 'Erro ao atualizar o departamento!']);
         }
@@ -61,10 +62,10 @@ class DepartmentController extends Controller
     }
 
     public function remover($id): View|RedirectResponse {
-        if(Auth::user()->cannot('admin') OR intval(decrypt($id)) === 1) {
+        if(Auth::user()->cannot('admin') OR intval(VerifyId::checkCryptdado($id)) < 3) {
             return redirect()->back();
         }
-        $departamento = Department::find(decrypt($id));
+        $departamento = Department::find(VerifyId::checkCryptdado($id));
         if(!$departamento) {
             return redirect()->back()->withInput()->with(['server_error' => 'Erro ao remover o departamento!']);
         }
@@ -72,11 +73,11 @@ class DepartmentController extends Controller
     }
 
     public function delete($id): RedirectResponse {
-        if(Auth::user()->cannot('admin') OR intval(decrypt($id)) === 1) {
+        if(Auth::user()->cannot('admin') OR intval(VerifyId::checkCryptdado($id)) < 3) {
             return redirect()->back();
         }
         try {
-            $departamento = Department::find(decrypt($id));
+            $departamento = Department::find(VerifyId::checkCryptdado($id));
             if(!$departamento) {
                 return redirect()->back()->withInput()->with(['server_error' => 'Erro ao remover o departamento!']);
             }
